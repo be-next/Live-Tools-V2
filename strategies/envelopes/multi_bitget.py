@@ -13,7 +13,7 @@ if sys.platform == "win32":
 
 
 async def main():
-    account = ACCOUNTS["bitget1"]
+    account = ACCOUNTS["bitget_bot_2"]
 
     margin_mode = "isolated"  # isolated or crossed
     exchange_leverage = 5
