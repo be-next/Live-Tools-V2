@@ -63,12 +63,12 @@ async def main():
             "envelopes": [0.07, 0.1, 0.15, 0.2],
             "size": 0.2,
         },
-        "REN/USDT": {
-            "src": "close",
-            "ma_base_window": 5,
-            "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.2,
-        },
+        # "REN/USDT": {
+        #     "src": "close",
+        #     "ma_base_window": 5,
+        #     "envelopes": [0.07, 0.1, 0.15, 0.2],
+        #     "size": 0.2,
+        # },
         "ACH/USDT": {
             "src": "close",
             "ma_base_window": 5,
