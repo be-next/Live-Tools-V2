@@ -20,7 +20,7 @@ async def main():
 
     tf = "1h"
     size_leverage = 3
-    sl = 0.3
+    sl = 0.5
     params = {
         # "BTC/USDT": {
         #     "src": "close",
