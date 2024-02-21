@@ -15,7 +15,7 @@ if sys.platform == "win32":
 async def main():
     account = ACCOUNTS["bitget_bot_2"]
 
-    margin_mode = "crossed"  # isolated or crossed
+    margin_mode = "isolated"  # isolated or crossed
     exchange_leverage = 3
 
     tf = "1h"
@@ -64,7 +64,7 @@ async def main():
             "envelopes": [0.07, 0.1, 0.15, 0.2],
             "size": 0.2,
         },
-        # "REN/USDT": {
+        # "SOL/USDT": {
         #     "src": "close",
         #     "ma_base_window": 5,
         #     "envelopes": [0.07, 0.1, 0.15, 0.2],
@@ -321,7 +321,8 @@ async def main():
                     error=False,
                 )
             )
-            # LONG
+
+            # START LONG
             for i in range(
                 len(params[position.pair]["envelopes"])
                 - params[position.pair]["canceled_orders_buy"],
@@ -349,34 +350,37 @@ async def main():
                         error=False,
                     )
                 )
-            # SHORT
-            # for i in range(
-            #     len(params[position.pair]["envelopes"])
-            #     - params[position.pair]["canceled_orders_sell"],
-            #     len(params[position.pair]["envelopes"]),
-            # ):
-            #     tasks_open.append(
-            #         exchange.place_trigger_order(
-            #             pair=position.pair,
-            #             side="sell",
-            #             trigger_price=exchange.price_to_precision(
-            #                 position.pair, row[f"ma_high_{i+1}"] * 0.995
-            #             ),
-            #             price=exchange.price_to_precision(
-            #                 position.pair, row[f"ma_high_{i+1}"]
-            #             ),
-            #             size=(
-            #                 (params[position.pair]["size"] * usdt_balance)
-            #                 / len(params[position.pair]["envelopes"])
-            #                 * size_leverage
-            #             )
-            #             / row[f"ma_high_{i+1}"],
-            #             type="limit",
-            #             reduce=False,
-            #             margin_mode=margin_mode,
-            #             error=False,
-            #         )
-            #     )
+            # END LONG
+
+            # START SHORT
+            for i in range(
+                len(params[position.pair]["envelopes"])
+                - params[position.pair]["canceled_orders_sell"],
+                len(params[position.pair]["envelopes"]),
+            ):
+                tasks_open.append(
+                    exchange.place_trigger_order(
+                        pair=position.pair,
+                        side="sell",
+                        trigger_price=exchange.price_to_precision(
+                            position.pair, row[f"ma_high_{i+1}"] * 0.995
+                        ),
+                        price=exchange.price_to_precision(
+                            position.pair, row[f"ma_high_{i+1}"]
+                        ),
+                        size=(
+                            (params[position.pair]["size"] * usdt_balance)
+                            / len(params[position.pair]["envelopes"])
+                            * size_leverage
+                        )
+                        / row[f"ma_high_{i+1}"],
+                        type="limit",
+                        reduce=False,
+                        margin_mode=margin_mode,
+                        error=False,
+                    )
+                )
+            # END SHORT
             
 
         print(f"Placing {len(tasks_close)} close SL / limit order...")
@@ -390,7 +394,7 @@ async def main():
         for pair in pairs_not_in_position:
             row = df_list[pair].iloc[-2]
             for i in range(len(params[pair]["envelopes"])):
-                # LONG
+                # START LONG
                 tasks_open.append(
                     exchange.place_trigger_order(
                         pair=pair,
@@ -411,27 +415,31 @@ async def main():
                         error=False,
                     )
                 )
-                # SHORT
-                # tasks_open.append(
-                #     exchange.place_trigger_order(
-                #         pair=pair,
-                #         side="sell",
-                #         trigger_price=exchange.price_to_precision(
-                #             pair, row[f"ma_high_{i+1}"] * 0.995
-                #         ),
-                #         price=exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
-                #         size=(
-                #             (params[pair]["size"] * usdt_balance)
-                #             / len(params[pair]["envelopes"])
-                #             * size_leverage
-                #         )
-                #         / row[f"ma_high_{i+1}"],
-                #         type="limit",
-                #         reduce=False,
-                #         margin_mode=margin_mode,
-                #         error=False,
-                #     )
-                # )
+                # END LONG
+
+                # START SHORT
+                tasks_open.append(
+                    exchange.place_trigger_order(
+                        pair=pair,
+                        side="sell",
+                        trigger_price=exchange.price_to_precision(
+                            pair, row[f"ma_high_{i+1}"] * 0.995
+                        ),
+                        price=exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
+                        size=(
+                            (params[pair]["size"] * usdt_balance)
+                            / len(params[pair]["envelopes"])
+                            * size_leverage
+                        )
+                        / row[f"ma_high_{i+1}"],
+                        type="limit",
+                        reduce=False,
+                        margin_mode=margin_mode,
+                        error=False,
+                    )
+                )
+                # END SHORT
+
 
         print(f"Placing {len(tasks_open)} open limit order...")
         await asyncio.gather(*tasks_open)  # Limit orders when not in positions
