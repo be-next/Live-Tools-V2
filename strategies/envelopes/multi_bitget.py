@@ -16,10 +16,10 @@ async def main():
     account = ACCOUNTS["bitget_bot_2"]
 
     margin_mode = "isolated"  # isolated or crossed
-    exchange_leverage = 3
+    exchange_leverage = 4
 
     tf = "1h"
-    size_leverage = 3
+    size_leverage = 4
     sl = 0.5
     params = {
         # "BTC/USDT": {
@@ -418,26 +418,26 @@ async def main():
                 # END LONG
 
                 # START SHORT
-                tasks_open.append(
-                    exchange.place_trigger_order(
-                        pair=pair,
-                        side="sell",
-                        trigger_price=exchange.price_to_precision(
-                            pair, row[f"ma_high_{i+1}"] * 0.995
-                        ),
-                        price=exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
-                        size=(
-                            (params[pair]["size"] * usdt_balance)
-                            / len(params[pair]["envelopes"])
-                            * size_leverage
-                        )
-                        / row[f"ma_high_{i+1}"],
-                        type="limit",
-                        reduce=False,
-                        margin_mode=margin_mode,
-                        error=False,
-                    )
-                )
+                # tasks_open.append(
+                #     exchange.place_trigger_order(
+                #         pair=pair,
+                #         side="sell",
+                #         trigger_price=exchange.price_to_precision(
+                #             pair, row[f"ma_high_{i+1}"] * 0.995
+                #         ),
+                #         price=exchange.price_to_precision(pair, row[f"ma_high_{i+1}"]),
+                #         size=(
+                #             (params[pair]["size"] * usdt_balance)
+                #             / len(params[pair]["envelopes"])
+                #             * size_leverage
+                #         )
+                #         / row[f"ma_high_{i+1}"],
+                #         type="limit",
+                #         reduce=False,
+                #         margin_mode=margin_mode,
+                #         error=False,
+                #     )
+                # )
                 # END SHORT
 
 
