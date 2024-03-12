@@ -15,12 +15,12 @@ if sys.platform == "win32":
 async def main():
     account = ACCOUNTS["bitget_bot_2"]
 
-    margin_mode = "isolated"  # isolated or crossed
+    margin_mode = "crossed"  # isolated or crossed
     exchange_leverage = 4
 
     tf = "1h"
     size_leverage = 4
-    sl = 0.4
+    sl = 0.3
     params = {
         "BTC/USDT": {
             "src": "close",
@@ -103,7 +103,7 @@ async def main():
             "src": "close",
             "ma_base_window": 5,
             "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.2,
+            "size": 0.1,
             "sides": ["long"],
         },
         "ENJ/USDT": {
@@ -173,7 +173,7 @@ async def main():
             "src": "close",
             "ma_base_window": 5,
             "envelopes": [0.07, 0.1, 0.15, 0.2],
-            "size": 0.2,
+            "size": 0.1,
             "sides": ["long"],
         },
         "TRX/USDT": {
